@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/spf13/cobra"
+	"os"
 )
 
 const (
@@ -40,6 +41,8 @@ func main() {
 	}
 	deployCmd.Flags().StringVarP(&Source, "source", "s", "stuff", "Source directory to read from")
 
+	kirkCmd.ParseFlags(os.Args)
+	fmt.Println("flags are:", kirkCmd.Root())
 	kirkCmd.AddCommand(versionCmd)
 	kirkCmd.AddCommand(deployCmd)
 	kirkCmd.Execute()
