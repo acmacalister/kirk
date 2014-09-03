@@ -1,18 +1,33 @@
 development:
-  servers: 10.16.1.1:22,myawesomevps.com:22
+  servers:
+    - 10.16.1.1:22
+    - myawesomevps.com:22
   password: ifyouneedit
   username: deployer
   pemfile: cool.pem
-  task_list: tester
+  task_list:
+    - webserver
+    - db
+    - restart
 staging:
-  servers: 10.16.1.1:22,myawesomevps.com:22
+  servers:
+    - 10.16.1.1:22
+    - myawesomevps.com:22
   password: ifyouneedit
   username: deployer
   pemfile: cool.pem
-  task_list: build,webserver.rb,restart
+  task_list:
+    - webserver
+    - db
+    - restart
 production:
-  servers: 10.16.1.1:22,myawesomevps.com:22
+  servers:
+    - 10.16.1.1:22
+    - myawesomevps.com:22
   password: ifyouneedit
   username: deployer
   pemfile: cool.pem
-  task_list: build,webserver.rb,restart
+  task_list:
+    - webserver
+    - db
+    - restart

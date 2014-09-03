@@ -2,34 +2,35 @@ package main
 
 import (
 	"github.com/acmacalister/skittles"
-	"github.com/kylelemons/go-gypsy/yaml"
+	"gopkg.in/yaml.v1"
+	"io/ioutil"
 	"log"
-	"strings"
+	"os"
 )
 
-type configuration struct {
-	servers  []string
-	username string
-	password string
-	pemfile  string
-	taskList []string
+type Configuration struct {
+	Servers  []string `yaml:"servers"`
+	Username string   `yaml:"username"`
+	Password string   `yaml:"password"`
+	Pemfile  string   `yaml:"pemfile"`
+	TaskList []string `yaml:"task_list"`
 }
 
-func loadConfig(environment string) configuration {
-	var config configuration
-	conf, err := yaml.ReadFile("kirk.yml")
+func loadConfig(environment string) Configuration {
+	dir, err := os.Getwd()
+	if err != nil {
+		log.Fatal(skittles.Red(err))
+	}
+	buffer, err := ioutil.ReadFile(dir + "/kirk.yml")
 
 	if err != nil {
 		log.Fatal(skittles.Red(err))
 	}
 
-	serverStr, _ := conf.Get(environment + ".servers")
-	config.servers = strings.Split(serverStr, ",")
-	config.password, _ = conf.Get(environment + ".password")
-	config.username, _ = conf.Get(environment + ".username")
-	config.pemfile, _ = conf.Get(environment + ".pemfile")
-	taskListStr, _ := conf.Get(environment + ".task_list")
-	config.taskList = strings.Split(taskListStr, ",")
+	m := make(map[string]Configuration)
+	if err := yaml.Unmarshal(buffer, &m); err != nil {
+		log.Fatal(skittles.Red(err))
+	}
 
-	return config
+	return m[environment]
 }

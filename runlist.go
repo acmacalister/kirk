@@ -8,28 +8,27 @@ import (
 	"github.com/acmacalister/skittles"
 	"log"
 	"os"
-	"time"
 )
 
-func runTaskList(config *configuration) {
+func runTaskList(config *Configuration) {
 	sshConfig := &ssh.ClientConfig{
-		User: config.username,
+		User: config.Username,
 		Auth: []ssh.AuthMethod{
-			ssh.Password(config.password),
+			ssh.Password(config.Password),
 		},
 	}
 
 	c := make(chan int)
-	for _, server := range config.servers {
+	for _, server := range config.Servers {
 		client, err := ssh.Dial("tcp", server, sshConfig)
 		if err != nil {
 			log.Fatal(skittles.Red("Failed to dial: " + err.Error()))
 		}
 
-		go executeTaskList(client, config.taskList, server, c)
+		go executeTaskList(client, config.TaskList, server, c)
 	}
 
-	for i, _ := range config.servers {
+	for i, _ := range config.Servers {
 		fmt.Sprintln("%d, %d", <-c, i)
 	}
 }
